@@ -24,3 +24,12 @@ def published(limit=10, published: bool = True):
 @app.get("/about/blog/{id}")
 def id(id:int):
     return {"data": {"id": id}}
+
+@app.get("/about/blog/{id}/comments")
+def comments(id:int):
+    if id==1:
+        return "comment_1"
+    elif id==2:
+        return "comment_2"
+    else:
+        return "no comment"
