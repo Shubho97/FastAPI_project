@@ -1,4 +1,6 @@
+from typing import Optional
 from fastapi import FastAPI # type: ignore
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -35,7 +37,11 @@ def comments(id:int):
         return "no comment"
 
 #post:
+class Blog(BaseModel):
+    title: str
+    body: str
+    published_at: Optional[bool]
 
 @app.post("/blog")
-def create_blog():
-    return {"data": "Blog is created"}
+def create_blog(blog:Blog):
+    return {"data": f"Blog is created with the title {blog.title}"}
