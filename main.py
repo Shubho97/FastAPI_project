@@ -4,16 +4,23 @@ app = FastAPI()
 
 @app.get("/about")
 def about():
-    return {"data": {"name": "Shubho", "id": 2}}
+    return {"data": {"name": "Shubho"}}
 
 @app.get("/home")
 def home():
     return "this is home page!!"
 
-@app.get("/about/blob")
-def bob():
+@app.get("/about/blog")
+def blog():
     return "this is blob page!! \n choose the number {1,2,3}"
 
-@app.get("/about/blob/{id}")
-def id(id):
+@app.get("/blog/published")
+def published(limit=10, published: bool = True):
+    if published:
+        return {f"{limit} published blog from db"}
+    else:
+        return {f"{limit} unpublished blog from db"}
+
+@app.get("/about/blog/{id}")
+def id(id:int):
     return {"data": {"id": id}}
