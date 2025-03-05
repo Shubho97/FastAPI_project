@@ -33,3 +33,9 @@ def comments(id:int):
         return "comment_2"
     else:
         return "no comment"
+
+#post:
+
+@app.post("/blog")
+def create_blog():
+    return {"data": "Blog is created"}
