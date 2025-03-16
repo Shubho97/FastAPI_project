@@ -1,0 +1,19 @@
+#To execute this requirements.txt file run the below command in virtual env:
+#pip install -r requirements.txt
+
+
+#To start the virtual env:
+#If you haven’t created a virtual environment yet, run:
+#python -m venv .venv
+#This will create a .venv folder in your project.
+
+
+#Now, activate it based on your OS:
+#On macOS & Linux
+#source .venv/bin/activate
+
+#ADD HERE the required dependencies:
+fastapi
+uvicorn
+sqlalchemy
+pysql
