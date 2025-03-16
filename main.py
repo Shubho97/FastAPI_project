@@ -15,6 +15,10 @@ class Book(BaseModel):
 
 BOOKS= []
 
+@app.get("/home")
+def home_page():
+    return "This is home page!!"
+
 #TO DISPLAY THE BOOK DATA IF PRESENT
 @app.get("/")
 def about():
