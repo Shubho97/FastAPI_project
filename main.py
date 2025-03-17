@@ -1,14 +1,25 @@
 from typing import Optional
 from uuid import UUID
-from fastapi import FastAPI, HTTPException # type: ignore
+from fastapi import FastAPI, HTTPException, Depends # type: ignore
 from pydantic import BaseModel
 import uvicorn
+import models
+from database import engine, SessionLocal
+from sqlalchemy.orm import Session
 
 
 app = FastAPI()
 
+models.Base.metadata.create_all(bind=engine)
+
+def get_db():
+    try:
+        db=SessionLocal()
+        yield db
+    finally:
+        db.close()
+
 class Book(BaseModel):
-    id: UUID
     title: str
     author: str
     description: str
@@ -21,13 +32,23 @@ def home_page():
 
 #TO DISPLAY THE BOOK DATA IF PRESENT
 @app.get("/")
-def about():
-    return BOOKS
+def read_api(db: Session= Depends(get_db)):
+    return db.query(models.Books).all()
+
 
 #TO STORE THE BOOK DATA
 @app.post("/")
-def create_book(book: Book):
-    BOOKS.append(book)
+def create_book(book: Book, db: Session = Depends(get_db)):
+    book_model =models.Books(
+    title=book.title,
+    author=book.author,
+    description=book.description
+    )
+
+    db.add(book_model)
+    db.commit()
+    db.refresh(book_model)
+
     return book
 
 
