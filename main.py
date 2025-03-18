@@ -54,32 +54,35 @@ def create_book(book: Book, db: Session = Depends(get_db)):
 
 #TO UPDATE THE DETAILS
 @app.put("/{book_id}")
-def update_book(book_id: UUID, book: Book):
-    counter= 0
-
-    for x in BOOKS:
-        counter +=1
-        if x.id== book_id:
-            BOOKS[counter - 1] = book
-            return BOOKS[counter-1]
+def update_book(book_id: int, book: Book, db: Session = Depends(get_db)):
+    book_model = db.query(models.Books).filter(models.Books.id == book_id).first()
     
-    raise HTTPException(
-        status_code=404,
-        detail=f"ID {book_id} : Does not exist"
-    )
+    if book_model is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"ID {book_id} : Does not exist"
+        )
+    
+    book_model.title = str(book.title)
+    book_model.author=str(book.author)
+    book_model.description=str(book.description)
+    
+    db.add(book_model)
+    db.commit()
+    db.refresh(book_model)
+
+    return book_model
 
 #TO DELETE BOOK DATA
 @app.delete("/{book_id}")
-def delete_book(book_id: UUID, book: Book):
-    counter= 0
-
-    for x in BOOKS:
-        counter +=1
-        if x.id== book_id:
-            del BOOKS[counter - 1]
-            return f"ID: {book_id} is deleted"
+def delete_book(book_id: int, db: Session = Depends(get_db)):
+    book_model = db.query(models.Books).filter(models.Books.id == book_id).first()
     
-    raise HTTPException(
-        status_code=404,
-        detail=f"ID {book_id} : Does not exist"
-    )
+    if book_model is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"ID {book_id} : Does not exist"
+        )
+    db.query(models.Books).filter(models.Books.id == book_id).delete()
+
+    db.commit()
