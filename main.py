@@ -1,5 +1,4 @@
 from typing import Optional
-from uuid import UUID
 from fastapi import FastAPI, HTTPException, Depends # type: ignore
 from pydantic import BaseModel
 import uvicorn
